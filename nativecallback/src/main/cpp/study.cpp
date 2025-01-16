@@ -1,6 +1,5 @@
 #include <jni.h>
 #include <string>
-#include <iostream>
 #include "log.h"
 
 static const char *JNI_REG_CLASS = "cn/my/nativecallback/NativeUtils";
@@ -39,10 +38,51 @@ int callFunc(JNIEnv *env, jclass clazz, jobject thisObj, int p1, int p2) {
     return result;
 }
 
+int call_func_args(JNIEnv *env, jclass clazz, jstring class_path,
+                   jstring method_name, jstring method_sig,
+                   jobject this_object, jintArray args) {
+    LOGD("%s", __FUNCTION__);
+    const char *class_path_str = env->GetStringUTFChars(class_path, JNI_FALSE);
+    const char *method_name_str = env->GetStringUTFChars(method_name, JNI_FALSE);
+    const char *method_sig_str = env->GetStringUTFChars(method_sig, JNI_FALSE);
+
+    jclass methodClass = env->FindClass(class_path_str);
+    // 获取方法 ID
+    jmethodID methodID = env->GetMethodID(methodClass, method_name_str, method_sig_str);
+
+    if (methodID == nullptr) {
+        LOGD("methodID == nullptr");
+        return -1;
+    }
+
+    // 获取参数并转换类型
+    // 获取 jintArray 的长度
+    jsize length = env->GetArrayLength(args);
+
+    // 获取 jintArray 的元素
+    jint *arrayElements = env->GetIntArrayElements(args, nullptr);
+    if (arrayElements == nullptr) {
+        return -1; // 获取元素失败
+    }
+
+    // 创建 jvalue 数组
+    jvalue *params = new jvalue[length];
+    // 将 jintArray 的元素复制到 jvalue 数组中
+    for (jsize i = 0; i < length; ++i) {
+        params[i].i = arrayElements[i];
+    }
+
+    // 调用 java 方法
+    int result = env->CallIntMethodA(this_object, methodID, params);
+    LOGD("result:%d", result);
+
+    return result;
+}
+
 static JNINativeMethod g_methods[] = {
-        {"callStaticFunc", "(II)I",                   (void *) callStaticFunc},
-        {"callFunc",       "(Ljava/lang/Object;II)I", (void *) callFunc},
-//        {"func3", "(Ljava/lang/String;)Ljava/lang/String;", (void *) func3},
+        {"callStaticFunc",   "(II)I",                                                                         (void *) callStaticFunc},
+        {"callFunc",         "(Ljava/lang/Object;II)I",                                                       (void *) callFunc},
+        {"callFuncWithArgs", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;[I)I", (void *) call_func_args},
 };
 
 // must define this function
@@ -63,88 +103,4 @@ JNIEXPORT int JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
     }
 
     return JNI_VERSION_1_6;
-}
-
-jobject convert(JNIEnv *env, jobject param) {
-    // 检查参数是否为 null
-    if (param == nullptr) {
-        return nullptr;
-    }
-
-    // 获取参数的类
-    jclass paramClass = env->GetObjectClass(param);
-    if (paramClass == nullptr) {
-        std::cerr << "Failed to get parameter class." << std::endl;
-        return nullptr;
-    }
-
-    // 获取类名
-    jclass classClass = env->FindClass("java/lang/Class");
-    jmethodID getNameMethod = env->GetMethodID(classClass, "getName", "()Ljava/lang/String;");
-    jstring className = (jstring) env->CallObjectMethod(paramClass, getNameMethod);
-    const char *classNameCStr = env->GetStringUTFChars(className, nullptr);
-
-    jobject resultObject = nullptr;
-
-    // 根据类名判断类型并转换
-    if (strcmp(classNameCStr, "java.lang.Integer") == 0) {
-        resultObject = param;
-    } else if (strcmp(classNameCStr, "java.lang.Float") == 0) {
-        resultObject = param;
-    } else if (strcmp(classNameCStr, "java.lang.Boolean") == 0) {
-        resultObject = param;
-    } else if (strcmp(classNameCStr, "java.lang.String") == 0) {
-        resultObject = param;
-    } else if (strcmp(classNameCStr, "java.lang.Double") == 0) {
-        resultObject = param;
-    } else if (strcmp(classNameCStr, "java.lang.Long") == 0) {
-        resultObject = param;
-    } else if (strcmp(classNameCStr, "java.lang.Short") == 0) {
-        resultObject = param;
-    } else if (strcmp(classNameCStr, "java.lang.Byte") == 0) {
-        resultObject = param;
-    } else {
-        std::cerr << "Unsupported type: " << classNameCStr << std::endl;
-    }
-
-    // 释放局部引用
-    env->ReleaseStringUTFChars(className, classNameCStr);
-
-    return resultObject;
-}
-
-extern "C"
-JNIEXPORT jobject JNICALL
-Java_cn_my_nativecallback_NativeUtils_callAny(JNIEnv *env, jclass clazz, jstring class_path,
-                                              jstring method_name, jstring method_sig,
-                                              jobject this_object, jintArray args) {
-    LOGD("%s", __FUNCTION__);
-    const char *class_path_str = env->GetStringUTFChars(class_path, JNI_FALSE);
-    const char *method_name_str = env->GetStringUTFChars(method_name, JNI_FALSE);
-    const char *method_sig_str = env->GetStringUTFChars(method_sig, JNI_FALSE);
-
-    jclass methodClass = env->FindClass(class_path_str);
-    // 获取方法 ID
-    jmethodID methodID = env->GetMethodID(methodClass, method_name_str, method_sig_str);
-
-    if (methodID == nullptr) {
-        LOGD("methodID == nullptr");
-        return nullptr;
-    }
-
-    jint *arrayElements = env->GetIntArrayElements(args, nullptr);
-    int p1 = arrayElements[0];
-    int p2 = arrayElements[1];
-
-    jint result = env->CallIntMethod(this_object, methodID, p1, p2);
-
-    jclass integerClass = env->FindClass("java/lang/Integer");
-
-    // 接下来，找到Integer类的构造函数
-    jmethodID integerConstructor = env->GetMethodID(integerClass, "<init>", "(I)V");
-
-    // 使用构造函数创建一个新的Integer对象
-    jobject integerObject = env->NewObject(integerClass, integerConstructor, result);
-
-    return integerObject;
 }

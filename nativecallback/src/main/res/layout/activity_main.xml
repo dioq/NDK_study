@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="click3"
-        android:text="调用任意方法" />
+        android:text="处理可变参数" />
 
     <TextView
         android:id="@+id/textViewId"
