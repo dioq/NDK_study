@@ -4,14 +4,22 @@
 
 static const char *JNI_REG_CLASS = "cn/my/dynamicregister/NativeUtils";
 
+static int add(int a, int b) {
+    return a + b;
+}
+
+static int mul(int a, int b) {
+    return a * b;
+}
+
 // static native 传入 NativeUtils 类 Class
 int func1(JNIEnv *env, jclass clazz, int p1, int p2) {
-    return p1 + p2;
+    return add(p1, p2);
 }
 
 // native 传入 NativeUtils 对象 this
 int func2(JNIEnv *env, jobject thiz, int p1, int p2) {
-    return p1 + p2;
+    return mul(p1, p2);
 }
 
 JNIEXPORT jstring JNICALL

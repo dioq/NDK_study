@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("DefaultLocale")
     public void click1(View view) {
         int result = NativeUtils.func1(a, b);
-        String msg = String.format("add(%d,%d) = %d", a, b, result);
+        String msg = String.format("func1(%d,%d) = %d", a, b, result);
         Log.d(TAG, msg);
         tv.setText(msg);
     }
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     public void click2(View view) {
         NativeUtils nativeUtils = new NativeUtils();
         int result = nativeUtils.func2(a, b);
-        String msg = String.format("add(%d,%d) = %d", a, b, result);
+        String msg = String.format("func2(%d,%d) = %d", a, b, result);
         Log.d(TAG, msg);
         tv.setText(msg);
     }
