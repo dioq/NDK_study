@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
     public void test(View view) {
         int a = 10, b = 20;
-        int result = NativeUtils.func1(a, b);
+        int result = NativeApi.func1(a, b);
         String msg = String.format("func1(%d,%d) = %d", a, b, result);
         Log.d(TAG, msg);
     }
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
     public void test2(View view) {
         int a = 10, b = 20;
-        int result = NativeUtils.func2(a, b);
+        int result = NativeApi.func2(a, b);
         String msg = String.format("func2(%d,%d) = %d", a, b, result);
         Log.d(TAG, msg);
     }

@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
 
-import cn.my.jni.NativeUtils;
+import cn.my.jni.NativeApi;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         System.load(file.getPath());
 //        System.load("/system/lib64/libhook.so");
         int a = 10, b = 20;
-        int result = NativeUtils.func1(a, b);
+        int result = NativeApi.func1(a, b);
         String msg = String.format("add(%d,%d) = %d", a, b, result);
         Log.d(TAG, msg);
     }

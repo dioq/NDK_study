@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import cn.my.jni.NativeApi;
+
 public class MainActivity extends AppCompatActivity {
     final private String TAG = "dlog";
 
@@ -24,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("DefaultLocale")
     public void click1(View view) {
-        int result = NativeUtils.func1(a, b);
+        int result = NativeApi.func1(a, b);
         String msg = String.format("func1(%d,%d) = %d", a, b, result);
         Log.d(TAG, msg);
         tv.setText(msg);
@@ -32,8 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("DefaultLocale")
     public void click2(View view) {
-        NativeUtils nativeUtils = new NativeUtils();
-        int result = nativeUtils.func2(a, b);
+        NativeApi nativeApi = new NativeApi();
+        int result = nativeApi.func2(a, b);
         String msg = String.format("func2(%d,%d) = %d", a, b, result);
         Log.d(TAG, msg);
         tv.setText(msg);
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("DefaultLocale")
     public void click3(View view) {
         String param = "This is message from java method!";
-        String msg = NativeUtils.func3(param);
+        String msg = NativeApi.func3(param);
         Log.d(TAG, msg);
         tv.setText(msg);
     }

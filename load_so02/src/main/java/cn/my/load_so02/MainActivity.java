@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import cn.my.jni.NativeUtils;
+import cn.my.jni.NativeApi;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -31,15 +31,15 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint({"SetTextI18n", "DefaultLocale", "UnsafeDynamicallyLoadedCode"})
     public void load1(View view) {
         int a = 10, b = 20;
-        int result = NativeUtils.func1(a, b);
-        String msg = String.format("add(%d,%d) = %d", a, b, result);
+        int result = NativeApi.func1(a, b);
+        String msg = String.format("func1(%d,%d) = %d", a, b, result);
         Log.d(TAG, msg);
     }
 
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
     public void load2(View view) {
         int a = 11, b = 22;
-        int result = NativeUtils.func2(a, b);
+        int result = NativeApi.func2(a, b);
         String msg = String.format("func2(%d,%d) = %d", a, b, result);
         Log.d(TAG, msg);
     }

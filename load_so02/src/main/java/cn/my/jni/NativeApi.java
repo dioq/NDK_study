@@ -1,6 +1,6 @@
 package cn.my.jni;
 
-public class NativeUtils {
+public class NativeApi {
     static {
         System.loadLibrary("study");
     }

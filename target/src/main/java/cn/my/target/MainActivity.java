@@ -1,4 +1,4 @@
-package cn.my.nativecallback;
+package cn.my.target;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import cn.my.jni.NativeApi;
 
-
 public class MainActivity extends AppCompatActivity {
     final private String TAG = "dlog";
 
@@ -18,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     int a = 10, b = 20;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,36 +27,25 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("DefaultLocale")
     public void click1(View view) {
-        int result = NativeApi.callStaticFunc(a, b);
-        String msg = String.format("add(%d,%d) = %d", a, b, result);
+        int result = NativeApi.func1(a, b);
+        String msg = String.format("func1(%d,%d) = %d", a, b, result);
         Log.d(TAG, msg);
         tv.setText(msg);
     }
 
     @SuppressLint("DefaultLocale")
     public void click2(View view) {
-        MethodUtils methodUtils = new MethodUtils();
-        methodUtils.num = 100;
-
-        int result = NativeApi.callFunc(methodUtils, a, b);
-        String msg = String.format("add(%d,%d) = %d", a, b, result);
+        NativeApi nativeUtils = new NativeApi();
+        int result = nativeUtils.func2(a, b);
+        String msg = String.format("func2(%d,%d) = %d", a, b, result);
         Log.d(TAG, msg);
         tv.setText(msg);
     }
 
     @SuppressLint("DefaultLocale")
     public void click3(View view) {
-        MethodUtils methodUtils = new MethodUtils();
-        methodUtils.num = 100;
-
-        String classPath = "cn/my/nativecallback/MethodUtils";
-        String methodName = "method2";
-        String methodSig = "(II)I";
-        Object thisObject = methodUtils;
-        int[] args = new int[]{a, b};
-
-        Object result = NativeApi.callFuncWithArgs(classPath, methodName, methodSig, thisObject, args);
-        String msg = String.format("add(%d,%d) = %d", a, b, (int) result);
+        String param = "This is message from java method!";
+        String msg = NativeApi.func3(param);
         Log.d(TAG, msg);
         tv.setText(msg);
     }

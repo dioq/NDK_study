@@ -2,7 +2,7 @@
 #include <string>
 #include "log.h"
 
-static const char *JNI_REG_CLASS = "cn/my/jni/NativeUtils";
+static const char *JNI_REG_CLASS = "cn/my/jni/NativeApi";
 
 
 int func1(JNIEnv *env, jclass clazz, int p1, int p2) {
@@ -34,7 +34,7 @@ JNIEXPORT int JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_cn_my_jni_NativeUtils_func2(JNIEnv *env, jclass clazz, jint p1, jint p2) {
+Java_cn_my_jni_NativeApi_func2__II(JNIEnv *env, jclass clazz, jint p1, jint p2) {
     // TODO: implement func2()
     return p1 + p2;
 }

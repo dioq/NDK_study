@@ -2,7 +2,7 @@
 #include <string>
 #include "log.h"
 
-static const char *JNI_REG_CLASS = "cn/my/nativecallback/NativeUtils";
+static const char *JNI_REG_CLASS = "cn/my/jni/NativeApi";
 
 int callStaticFunc(JNIEnv *env, jclass clazz, int p1, int p2) {
     LOGD("%s", __FUNCTION__);

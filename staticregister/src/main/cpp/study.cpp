@@ -3,19 +3,19 @@
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_cn_my_staticregister_NativeUtils_func1(JNIEnv *env, jclass clazz, jint p1, jint p2) {
+Java_cn_my_jni_NativeApi_func1(JNIEnv *env, jclass clazz, jint p1, jint p2) {
     // TODO: implement func1()
     return p1 + p2;
 }
 extern "C"
 JNIEXPORT jint JNICALL
-Java_cn_my_staticregister_NativeUtils_func2(JNIEnv *env, jobject thiz, jint p1, jint p2) {
+Java_cn_my_jni_NativeApi_func2(JNIEnv *env, jobject thiz, jint p1, jint p2) {
     // TODO: implement func2()
     return p1 + p2;
 }
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_cn_my_staticregister_NativeUtils_func3(JNIEnv *env, jclass clazz, jstring msg) {
+Java_cn_my_jni_NativeApi_func3(JNIEnv *env, jclass clazz, jstring msg) {
     // TODO: implement func3()
     //获取字符串指针，必须使用指针，不能使用char strContent[],因为GetStringUTFChars()返回值为const char *;
     const char *strContent = env->GetStringUTFChars(msg, JNI_FALSE);
