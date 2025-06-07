@@ -12,31 +12,32 @@ static int mul(int a, int b) {
     return a * b;
 }
 
-// static native 传入 NativeUtils 类 Class
 int func1(JNIEnv *env, jclass clazz, int p1, int p2) {
     return add(p1, p2);
 }
 
-// native 传入 NativeUtils 对象 this
 int func2(JNIEnv *env, jobject thiz, int p1, int p2) {
     return mul(p1, p2);
 }
 
 JNIEXPORT jstring JNICALL
 func3(JNIEnv *env, jclass clazz, jstring msg) {
-    //获取字符串指针，必须使用指针，不能使用char strContent[],因为GetStringUTFChars()返回值为const char *;
-    const char *strContent = env->GetStringUTFChars(msg, JNI_FALSE);
-    char str[] = "欢迎你的到来！";
+    char str[] = "This is a string from so!";
 
-    //字符串拼接,实现strContent+str1,因为strcat的第一个参数必须为非const类型(可变)，所以不能直接使用strcat()
+//    std::string str1 = "This is C++ string";
+    //获取字符串指针
+    const char *strContent = env->GetStringUTFChars(msg, JNI_FALSE);
+
     //创建一个新的字符串指针
-    char *strTemp = (char *) malloc(strlen(strContent) + strlen(str) + 1);
+    char *buff = (char *) malloc(0x100);
+    memset(buff, 0, 0x100);
     //拷贝常量到字符串指针
-    strcpy(strTemp, strContent);
+    strcpy(buff, strContent);
     //拼接str1到strTemp
-    strcat(strTemp, str);
-    //返回一个utf的jstring
-    return env->NewStringUTF(strTemp);
+    strcat(buff, str);
+    jstring jstring1 = env->NewStringUTF(buff);
+    free(buff);
+    return jstring1;
 }
 
 static JNINativeMethod g_methods[] = {
@@ -45,7 +46,6 @@ static JNINativeMethod g_methods[] = {
         {"func3", "(Ljava/lang/String;)Ljava/lang/String;", (void *) func3},
 };
 
-// must define this function
 JNIEXPORT int JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
     JNIEnv *env;
     if (vm->GetEnv((void **) &env, JNI_VERSION_1_6) != JNI_OK) {
